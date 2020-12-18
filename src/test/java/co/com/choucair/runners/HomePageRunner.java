@@ -1,14 +1,13 @@
 package co.com.choucair.runners;
 
 import cucumber.api.CucumberOptions;
-//import io.cucumber.junit.Cucumber;
+import cucumber.api.junit.Cucumber;
 import org.junit.runner.RunWith;
 
-//@RunWith(Cucumber.class)
+@RunWith(Cucumber.class)
 @CucumberOptions(
-       // plugin = {"pretty", "html:target/cucumber"},
-        features = {"src/test/resources"})
-
-
-public class HomePageRunner {
-}
+        plugin = {"pretty", "html:target/cucumber"},
+        features = {"src/test/resources/"
+        },
+        glue = {"co.com.choucair.steps"})
+public class HomePageRunner {}

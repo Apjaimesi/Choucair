@@ -9,6 +9,10 @@ repositories {
     mavenCentral()
 }
 
+project.ext {
+    cucumberVersion = '5.6.0'
+}
+
 dependencies {
     //testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
     //testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
@@ -18,6 +22,7 @@ dependencies {
     testImplementation 'info.cukes:cucumber-core:1.2.5'
     testImplementation 'info.cukes:cucumber-java:1.2.5'
     testImplementation 'info.cukes:cucumber-java8:1.2.5'
+    testImplementation 'info.cukes:cucumber-junit:1.2.6'
     testImplementation 'junit:junit:4.12'
     testImplementation 'com.novocode:junit-interface:0.11'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.0'
@@ -25,9 +30,26 @@ dependencies {
     compile group: 'com.codeborne', name: 'selenide', version: '4.5.1'
     testImplementation 'info.cukes:cucumber-picocontainer:1.2.5'
     testImplementation 'org.picocontainer:picocontainer:2.15'
-
-    //    "org.picocontainer" % "picocontainer" % "2.15"
 }
+
+configurations {
+    cucumberRuntime {
+        extendsFrom testImplementation
+    }
+}
+
+task cucumber() {
+    dependsOn assemble, compileTestJava
+    doLast {
+        javaexec {
+            main = "cucumber.api.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = ['--plugin', 'html:reports/test-report', '--plugin', 'pretty', '--glue', 'co.com.choucair.steps.profile co.com.choucair.steps.homePage', 'src/test/resources']
+        }
+    }
+}
+
+
 
 test {
     useJUnitPlatform()
